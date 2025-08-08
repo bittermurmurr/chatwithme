@@ -1,13 +1,13 @@
 // Сценарий чата — массив объектов
 const dialogueScript = [
-    { sender: "bot", text: "Ты опять здесь?" },
-    { sender: "bot", text: "Я видел, как ты зашёл в комнату." },
-    { sender: "bot", text: "Фонарик у тебя не поможет." }
+    { sender: "It", text: "You here." },
+    { sender: "It", text: "I could see it coming." },
+    { sender: "It", text: "Took you long enough" }
 ];
 
 // Реакции на ключевые слова
 const botResponses = {
-    "кто": "Не важно, кто я. Важно, что я рядом.",
-    "где": "Я в том же месте, что и ты. Не оборачивайся.",
-    "привет": "Тебе не стоило начинать этот разговор."
+    "who are you": "What matters is that I am here now",
+    "where": "Right behind you.",
+    "hi": "You should've continued watching youtube"
 };
