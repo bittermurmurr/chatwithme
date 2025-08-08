@@ -5,21 +5,14 @@ const dialogueScript = [
     { sender: "It", text: "Took you long enough, I missed you." }
 ];
 
-// Реакции на ключевые слова
-const botResponses = {
-    "who are you": "What matters is that I am here now",
-    "where": "Right behind you.",
-    "hi": "You should've continued watching youtube",
-    "how are you": "Good now. You are here."
-};
 
 
 // Разбитые по времени фразы
 const dialogues = {
     early: [ // 0-2 минуты — интригующие, странные
         "You here.",
-        "I could see it coming.",
-        "Took you long enough."
+        "I am so glad you finally came.",
+        "Took you long enough, I missed you."
     ],
     mid: [ // 2-4 минуты — нагнетающие страх
         "Why do you hide?",
@@ -51,5 +44,6 @@ const dialogues = {
 const botResponses = {
     "who are you": "What matters is that I am here now",
     "where": "Right behind you.",
-    "hi": "You should've continued watching youtube"
+    "hi": "You should've continued watching youtube",
+    "how are you": "Good now. You are here."
 };
