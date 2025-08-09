@@ -5,7 +5,8 @@
 const laugh_array = [
     "creepy_laugh.mp3",
     "creepy_laugh_2.mp3",
-    "creepy_laugh_3.mp3"
+    "creepy_laugh_3.mp3",
+    "creepy_laugh_4.mp3"
 ]
 // Ёффект 1: √люк Ч замена текста пользовател€ на известную фразу
 export function glitchEffect(addMessage, userInput, botResponses) {
