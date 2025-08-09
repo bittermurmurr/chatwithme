@@ -1,35 +1,41 @@
 // Ёффект 1: √люк экрана Ч быстрое мигание и сдвиг текста + искажение цвета на пару секунд
+
+
+
+const laugh_array = [
+    "creepy_laugh.mp3",
+    "creepy_laugh_2.mp3",
+    "creepy_laugh_3.mp3"
+]
+// Ёффект 1: √люк Ч замена текста пользовател€ на известную фразу
 export function glitchEffect(addMessage, userInput, botResponses) {
-    addMessage("bot", "[SYSTEM ERROR]... glitching...");
+    const keys = Object.keys(botResponses);
+    const randomKey = getRandomElement(keys);
 
-    // —оздаем эффект глюка на контейнере сообщений
-    const container = document.getElementById("messages");
-    let glitchCount = 0;
-    const glitchInterval = setInterval(() => {
-        if (glitchCount % 2 === 0) {
-            container.style.filter = "hue-rotate(90deg) saturate(200%) blur(1px)";
-            container.style.transform = "translate(" + (Math.random() * 10 - 5) + "px," + (Math.random() * 10 - 5) + "px)";
-        } else {
-            container.style.filter = "none";
-            container.style.transform = "none";
-        }
-        glitchCount++;
-        if (glitchCount > 10) { // около 1 секунды эффекта (10*100ms)
-            clearInterval(glitchInterval);
-            container.style.filter = "none";
-            container.style.transform = "none";
+    // »щем последнее сообщение пользовател€ и мен€ем текст
+    const messages = document.querySelectorAll("#messages .message.user");
+    if (messages.length > 0) {
+        const lastUserMessage = messages[messages.length - 1];
+        lastUserMessage.textContent = randomKey; // мен€ем на известный вопрос
+    } else {
+        // если нет сообщений от пользовател€ Ч просто добавл€ем
+        addMessage("user", randomKey);
+    }
 
-            // ѕосле глюка Ч показываем случайный известный ответ
-            const keys = Object.keys(botResponses);
-            const randomKey = keys[Math.floor(Math.random() * keys.length)];
-            addMessage("bot", botResponses[randomKey]);
-        }
-    }, 100);
+    // »митаци€ небольшой задержки, потом бот отвечает
+    setTimeout(() => {
+        addMessage("bot", botResponses[randomKey]);
+    }, 1500);
+}
+
+function getRandomElement(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
 }
 
 // Ёффект 2: «адержка ответа с аудио (например, зловещий смех)
 export function delayedQuestionEffect(addMessage, userInput, botResponses, playAudio) {
-    playAudio("creepy_laugh.mp3"); // ‘айл должен быть в папке с игрой
+    let sound = getRandomElement(laugh_array);
+    playAudio(sound); // ѕроигрываем случайный файл из списка
 
     setTimeout(() => {
         const keys = Object.keys(botResponses);

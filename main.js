@@ -10,6 +10,7 @@ let currentIdleIndex = 0;
 let currentDialogueIndex = 0;
 let currentPhase = "early";
 let finalStarted = false;
+let lastPhase = "early";
 
 // Функция вывода сообщения
 function addMessage(sender, text) {
@@ -78,7 +79,7 @@ function getFakeIP() {
 
 // Обработка ввода пользователя
 function handleUserInput() {
-    if (finalStarted) return; // после финала игнорируем ввод
+    if (finalStarted) return;
 
     const text = userInput.value.trim();
     if (!text) return;
@@ -87,15 +88,18 @@ function handleUserInput() {
     userInput.value = "";
 
     resetIdleTimer();
-
     updatePhase();
 
-    // Проверяем ключевые слова в ответах
-    const lower = text.toLowerCase();
+    // Убираем знаки препинания
+    let lower = text.toLowerCase().replace(/[^\w\s]/g, '').trim();
     let foundResponse = null;
-    for (let key in botResponses) {
-        if (lower.includes(key)) {
-            foundResponse = botResponses[key];
+
+    // Берём ответы для текущей фазы
+    const phaseResponses = botResponses[currentPhase] || {};
+
+    for (let key in phaseResponses) {
+        if (lower === key) {
+            foundResponse = phaseResponses[key];
             break;
         }
     }
@@ -105,15 +109,15 @@ function handleUserInput() {
             addMessage("bot", foundResponse);
         }, 1500);
     } else {
-        // Если вопрос не распознан — вызываем случайный эффект
         const effect = effects[Math.floor(Math.random() * effects.length)];
         if (effect === delayedQuestionEffect) {
-            effect(addMessage, text, botResponses, playAudio);
+            effect(addMessage, text, phaseResponses, playAudio);
         } else {
-            effect(addMessage, text, botResponses);
+            effect(addMessage, text, phaseResponses);
         }
     }
 }
+
 
 // Запуск стартовых диалогов с задержками
 function startDialogue() {
@@ -125,6 +129,7 @@ function startDialogue() {
         delay += 2000;
     });
     currentDialogueIndex = dialogues.early.length;
+    setInterval(checkPhaseChange, 5000);
 }
 
 // Запуск финала по таймеру 5 минут
@@ -136,6 +141,26 @@ sendBtn.addEventListener("click", handleUserInput);
 userInput.addEventListener("keydown", e => {
     if (e.key === "Enter") handleUserInput();
 });
+
+function checkPhaseChange() {
+    updatePhase();
+    if (currentPhase !== lastPhase) {
+        lastPhase = currentPhase;
+        currentDialogueIndex = 0; // начинаем новый блок с начала
+        playPhaseIntro(); // сразу выдаём фразы новой фазы
+    }
+}
+
+function playPhaseIntro() {
+    const phaseArray = dialogues[currentPhase];
+    let delay = 0;
+    phaseArray.forEach(line => {
+        setTimeout(() => addMessage("bot", line), delay);
+        delay += 2000;
+    });
+    currentDialogueIndex = phaseArray.length;
+}
+
 
 // Запуск
 startDialogue();
